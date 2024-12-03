@@ -7,10 +7,10 @@ body{
 }
 header {
     text-align: center;
-    font-size: 3rem; /* Możesz zmienić rozmiar czcionki */
+    font-size: 3rem;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    animation: zmianaKoloru 5s infinite alternate; /* Animacja zmiany koloru */
+    animation: zmianaKoloru 5s infinite alternate;
 }
 main{
     width: 100%;

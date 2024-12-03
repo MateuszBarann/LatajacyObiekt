@@ -1,8 +1,9 @@
-var Zwierze = function(x, y, width, height) {
+var Zwierze = function(x, y, width, height, speed) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.speed = speed;
 };
 
 Zwierze.prototype.rysuj = function(a) {
@@ -21,7 +22,7 @@ Zwierze.prototype.rysuj = function(a) {
 
 Zwierze.prototype.wPrawo = function() {
     if (this.x + this.width < $(window).width()) { 
-        this.x += 10;
+        this.x += this.speed;
         this.ZwierzeElement.css({
             left: this.x + "px",
             top: this.y + "px"
@@ -31,7 +32,7 @@ Zwierze.prototype.wPrawo = function() {
 
 Zwierze.prototype.wLewo = function() {
     if (this.x > 0) { 
-        this.x -= 10;
+        this.x -= this.speed;
         this.ZwierzeElement.css({
             left: this.x + "px",
             top: this.y + "px"
@@ -41,7 +42,7 @@ Zwierze.prototype.wLewo = function() {
 
 Zwierze.prototype.wGore = function() {
     if (this.y > 0) { 
-        this.y -= 10;
+        this.y -= this.speed;
         this.ZwierzeElement.css({
             left: this.x + "px",
             top: this.y + "px"
@@ -51,14 +52,13 @@ Zwierze.prototype.wGore = function() {
 
 Zwierze.prototype.wDol = function() {
     if (this.y + this.height < $(window).height()) { 
-        this.y += 10;
+        this.y += this.speed;
         this.ZwierzeElement.css({
             left: this.x + "px",
             top: this.y + "px"
         });
     }
 };
-
 
 Zwierze.prototype.sprawdzKolizje = function(inneZwierze) {   
     return !(this.x + this.width < inneZwierze.x || 
@@ -67,15 +67,27 @@ Zwierze.prototype.sprawdzKolizje = function(inneZwierze) {
              this.y > inneZwierze.y + inneZwierze.height); 
 };
 
+function stworzNowaMyszka() {
+    var x = Math.floor(Math.random() * ($(window).width() - 100));
+    var y = Math.floor(Math.random() * ($(window).height() - 100));
+    var myszka = new Zwierze(x, y, 100, 100, 30);
+    var a = '<img src="mysz.png">';
+    myszka.rysuj(a);
+    return myszka;
+}
 
-var Zwierze1 = new Zwierze(1000, 500, 300, 300);
-var mysz1 = new Zwierze(10, 20, 100, 100);
-
+var licznikMyszek = 0;
+var Zwierze1 = new Zwierze(1000, 500, 300, 300, 10);
+var mysz1 = stworzNowaMyszka();
 
 var a = '<img src="kot.png">';
 Zwierze1.rysuj(a);
-a = '<img src="mysz.png">';
-mysz1.rysuj(a);
+
+function aktualizujLicznik() {
+    $("#licznik").text("Zjedzone myszki: " + licznikMyszek);
+}
+
+$("header").append('<div id="licznik">Zjedzone myszki: 0</div>');
 
 $(document).keydown(function(e) {
     switch (e.key) {
@@ -95,6 +107,10 @@ $(document).keydown(function(e) {
 
     if (Zwierze1.sprawdzKolizje(mysz1)) {
         mysz1.ZwierzeElement.remove();
+        licznikMyszek++;
+        aktualizujLicznik();
+
+        mysz1 = stworzNowaMyszka();
     }
 });
 
@@ -112,9 +128,25 @@ $(document).keydown(function(e) {
         case "d":
             mysz1.wPrawo();
             break;
+        case "W":
+            mysz1.wGore();
+            break;
+        case "S":
+            mysz1.wDol();
+            break;
+        case "A":
+            mysz1.wLewo();
+            break;
+        case "D":
+            mysz1.wPrawo();
+            break;
     }
 
     if (Zwierze1.sprawdzKolizje(mysz1)) {
         mysz1.ZwierzeElement.remove();
+        licznikMyszek++;
+        aktualizujLicznik(); 
+
+        mysz1 = stworzNowaMyszka();
     }
 });
